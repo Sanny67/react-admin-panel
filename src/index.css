@@ -48,7 +48,7 @@ html, body, #root, .app, .content{
   background: #555; 
 }
 
-/* .abc {
+/* .dark {
   color: #1b2537;
 
   color100: #d0d1d5;
@@ -60,4 +60,28 @@ html, body, #root, .app, .content{
   color700: #0c101b;
   color800: #080b12;
   color900: #040509;
+}
+
+.light{
+  color: #040509;
+  color: #080b12;
+  color: #0c101b;
+  color: #f2f0f0;
+  color: #141b2d;
+  color: #434957;
+  color: #727681;
+  color: #a1a4ab;
+  color: #d0d1d5;
+}
+
+.indigo {
+    color: #f2f0f0;
+    color: #d9dbdd;
+    color: #b4b6bc;
+    color: #8e929a;
+    color: #696d79;
+    color: #434957;
+    color: #363a46;
+    color: #282c34;
+    color: #1b1d23;
 } */
