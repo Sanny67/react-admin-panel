@@ -1,6 +1,6 @@
 import React from "react";
 import { ColorModeContext, useMode } from "./theme";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Topbar from './scenes/global/Topbar';
 import Sidebar from "./scenes/global/Sidebar";
@@ -11,10 +11,10 @@ import Invoices from "./scenes/invoices";
 import Profile from "./scenes/profile";
 import Calendar from "./scenes/calendar";
 import FAQ from "./scenes/faq";
-import BarChart from "./scenes/charts/bar";
-import PieChart from "./scenes/charts/pie";
-import LineChart from "./scenes/charts/line";
-import GeoChart from "./scenes/charts/geo";
+import BarChartPage from "./scenes/charts/bar";
+import PieChartPage from "./scenes/charts/pie";
+import LineChartPage from "./scenes/charts/line";
+import GeoChartPage from "./scenes/charts/geo";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -28,24 +28,26 @@ function App() {
             <Sidebar/>
             <main className="content">
               <Topbar/>
-              <Routes>
-              
-                <Route path="/" element={<Dashboard/>} />
+              <Box sx={{overflowY: 'auto', flex: 1}} >
+                <Routes>
+                
+                  <Route path="/" element={<Dashboard/>} />
 
-                <Route path="/team" element={<Team/>} />
-                <Route path="/contacts" element={<Contacts/>} />
-                <Route path="/invoices" element={<Invoices/>} />
+                  <Route path="/team" element={<Team/>} />
+                  <Route path="/contacts" element={<Contacts/>} />
+                  <Route path="/invoices" element={<Invoices/>} />
 
-                <Route path="/profile" element={<Profile/>} />
-                <Route path="/calendar" element={<Calendar/>} />
-                <Route path="/faq" element={<FAQ/>} />
+                  <Route path="/profile" element={<Profile/>} />
+                  <Route path="/calendar" element={<Calendar/>} />
+                  <Route path="/faq" element={<FAQ/>} />
 
-                <Route path="/bar-chart" element={<BarChart/>} />
-                <Route path="/pie-chart" element={<PieChart/>} />
-                <Route path="/line-chart" element={<LineChart/>} />
-                <Route path="/geo-chart" element={<GeoChart/>} />
+                  <Route path="/bar-chart" element={<BarChartPage/>} />
+                  <Route path="/pie-chart" element={<PieChartPage/>} />
+                  <Route path="/line-chart" element={<LineChartPage/>} />
+                  <Route path="/geo-chart" element={<GeoChartPage/>} />
 
-              </Routes>
+                </Routes>
+              </Box>
             </main>
           </div>
         </Router>

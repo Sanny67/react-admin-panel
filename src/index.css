@@ -22,7 +22,12 @@ html, body, #root, .app, .content{
 
 .app {
   display: flex;
-  position: relative;
+  position: fixed;
+}
+.content{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 /* width */

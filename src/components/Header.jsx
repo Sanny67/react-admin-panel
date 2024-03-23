@@ -13,6 +13,7 @@ const Header = ({title, subtitle}) => {
                 variant="h2"
                 sx={{mb: '5px'}}
                 fontWeight="bold"
+                textTransform="uppercase"
                 color={colors.grey[100]}
             >{title}</Typography>
 
