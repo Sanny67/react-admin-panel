@@ -1,5 +1,5 @@
-import React from "react";
-import { ColorModeContext, useMode } from "./theme";
+import React, { useEffect } from "react";
+import { ColorModeContext, tokens, useMode } from "./theme";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Topbar from './scenes/global/Topbar';
@@ -18,7 +18,24 @@ import GeoChartPage from "./scenes/charts/geo";
 
 function App() {
   const [theme, colorMode] = useMode();
+  const colors = tokens(theme.palette.mode);
 
+  const root = document.documentElement;
+
+  useEffect(() => {
+    const scrollbarTrackColor = getComputedStyle(root).getPropertyValue('--scrollbar-track-color');
+    const scrollbarThumbColor = getComputedStyle(root).getPropertyValue('--scrollbar-thumb-color');
+    const scrollbarThumbHoverColor = getComputedStyle(root).getPropertyValue('--scrollbar-thumb-color-hover');
+
+    if(theme.palette.mode === "dark") {
+      root.style.setProperty('--scrollbar-thumb-color', colors.primary[600]);
+      root.style.setProperty('--scrollbar-thumb-color-hover', colors.primary[700]);
+    } else {
+      root.style.setProperty('--scrollbar-thumb-color', colors.grey[700]);
+      root.style.setProperty('--scrollbar-thumb-color-hover', colors.grey[600]);
+    }
+  }, [colors]);
+  
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
