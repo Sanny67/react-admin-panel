@@ -62,7 +62,7 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
         tickSize: 0,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "transportation", // added
+        legend: isDashboard ? "transportation" : "transportation", // added
         legendOffset: 36,
         legendPosition: "middle",
       }}
@@ -72,7 +72,7 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
         tickSize: 3,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "count", // added
+        legend: isDashboard ? "count" : "count", // added
         legendOffset: -40,
         legendPosition: "middle",
       }}
@@ -83,6 +83,35 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
       pointBorderWidth={2}
       pointBorderColor={{ from: "serieColor" }}
       pointLabelYOffset={-12}
+
+      layers={['grid', 'markers', 'axes', 'areas', 'crosshair', 'lines', 'points', 'slices', 'mesh', 'legends']}
+      enablePoints={true}
+      enablePointLabel={false}
+      pointLabel="yFormatted"
+      enableArea={false}
+      areaOpacity={0.2}
+      areaBlendMode="normal"
+      areaBaselineValue={0}
+      lineWidth={2}
+      isInteractive={true}
+      debugMesh={false}
+      tooltip={()=>{}}
+      enableSlices={false}
+      debugSlices={false}
+      sliceTooltip={()=>{}}
+      enableCrosshair={true}
+      crosshairType="bottom-left"
+      defs={[{
+          id: 'gradientA',
+          type: 'linearGradient',
+          colors: [
+              { offset: 0, color: '#faf047' },
+              { offset: 100, color: '#e4b400' },
+          ],
+      }]}
+      fill={[{ match: { id: 'react' }, id: 'gradientA' }]}
+      role="line"
+
       useMesh={true}
       legends={[
         {

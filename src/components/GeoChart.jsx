@@ -50,6 +50,22 @@ const GeoChart = ({ isDashboard = false }) => {
       projectionRotation={[0, 0, 0]}
       borderWidth={1.5}
       borderColor="#ffffff"
+
+      fillColor="nivo"
+      enableGraticule={false}
+      graticuleLineWidth={0.5}
+      graticuleLineColor="#dddddd"
+      isInteractive={true}
+      onMouseMove={()=>{}}
+      onMouseEnter={()=>{}}
+      onMouseLeave={()=>{}}
+      onClick={()=>{}}
+      // layers={['graticule', 'features']}
+      role="geography"
+      // match="value"
+      value="value"
+      colors="nivo"
+
       legends={
         !isDashboard
           ? [
