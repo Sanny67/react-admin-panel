@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import ReceiptOutlinedIcon from '@mui/icons-material/ReceiptOutlined';
@@ -14,15 +13,16 @@ import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../theme';
-import { Box, IconButton, ListItem, Typography, styled } from '@mui/material';
+import { Box, IconButton, ListItem, Typography, useMediaQuery } from '@mui/material';
 import { Sidebar as ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { Link } from 'react-router-dom';
 import UserImage from '../../assets/user.png';
+import MenuIcon from '@mui/icons-material/Menu';
 
-
-const Item = ({ title, to, icon, selected, setSelected }) => {
+const Item = ({ title, to, icon, selected, setSelected, setIsCollapsed }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const isMobile = useMediaQuery('(max-width:426px)');
 
     return (
       <MenuItem
@@ -31,7 +31,10 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
         style={{
           color: colors.grey[100],
         }}
-        onClick={() => setSelected(title)}
+        onClick={() => {
+            setSelected(title);
+            if(isMobile) setIsCollapsed(false);
+        }}
         component={<Link to={to} />}
       >
         <Typography>{title}</Typography>
@@ -42,15 +45,24 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 const Sidebar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const isMobile = useMediaQuery('(max-width:426px)');
+    const [isCollapsed, setIsCollapsed] = useState(isMobile ? true : false);
     const [selected, setSelected] = useState("Dashboard");
 
     return (
-        <Box>
-            <ProSidebar collapsed={isCollapsed}
+        <>
+            {isMobile && <Box position="absolute" top={0} left={0} padding="15px 10px" onClick={() => setIsCollapsed(!isCollapsed)}>
+                <IconButton>
+                    <MenuIcon/>
+                </IconButton>
+            </Box>}
+            <ProSidebar 
+                collapsed={false}
                 rootStyles={{
                     height: '100%',
                     border: 'none',
+                    width: isMobile ? (isCollapsed ? ' 0 !important' : '100%') : "auto",
+                    minWidth: isMobile ? (isCollapsed ? ' 0 !important' : '100%') : "auto",
                     background: `${colors.primary[400]} !important`,
                     "& *": {
                         background: `transparent !important`,
@@ -76,7 +88,7 @@ const Sidebar = () => {
                     }}
                     rootStyles={{
                         background: `${colors.primary[400]} !important`,
-                        padding: "5px 20px 20px !important",
+                        padding: isMobile ? "5px" : "5px 20px 20px" + "!important",
                         '& .ps-menuitem-root.main-menu .ps-menu-button': {
                             padding: 0,
                         },
@@ -142,6 +154,7 @@ const Sidebar = () => {
                             icon={<HomeOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
+                            setIsCollapsed={setIsCollapsed}
                         />
                         {/* <SubMenu
                             label="Data"
@@ -159,6 +172,7 @@ const Sidebar = () => {
                                 icon={<PeopleOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                             <Item
                                 to="/contacts"
@@ -166,6 +180,7 @@ const Sidebar = () => {
                                 icon={<ContactsOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                             <Item
                                 to="/invoices"
@@ -173,6 +188,7 @@ const Sidebar = () => {
                                 icon={<ReceiptOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                         {/* </SubMenu>
 
@@ -192,6 +208,7 @@ const Sidebar = () => {
                                 icon={<PersonOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                             <Item
                                 title="Calendar"
@@ -199,6 +216,7 @@ const Sidebar = () => {
                                 icon={<CalendarTodayOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                             <Item
                                 title="FAQ Page"
@@ -206,6 +224,7 @@ const Sidebar = () => {
                                 icon={<HelpOutlineOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                         {/* </SubMenu>
 
@@ -225,6 +244,7 @@ const Sidebar = () => {
                                 icon={<BarChartOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                             <Item
                                 title="Pie Chart"
@@ -232,6 +252,7 @@ const Sidebar = () => {
                                 icon={<PieChartOutlineOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                             <Item
                                 title="Line Chart"
@@ -239,6 +260,7 @@ const Sidebar = () => {
                                 icon={<TimelineOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                             <Item
                                 title="Geography Chart"
@@ -246,6 +268,7 @@ const Sidebar = () => {
                                 icon={<MapOutlinedIcon />}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setIsCollapsed={setIsCollapsed}
                             />
                         {/* </SubMenu> */}
 
@@ -255,7 +278,7 @@ const Sidebar = () => {
 
                 </Menu>
             </ProSidebar>
-        </Box>
+        </>
     );
 };
 

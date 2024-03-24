@@ -1,4 +1,5 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Button, IconButton, Typography, useTheme, useMediaQuery, Tooltip } from "@mui/material";
+import { styled } from "@mui/system";
 import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
@@ -11,19 +12,100 @@ import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import LineChart from "../../components/LineChart";
 import BarChart from "../../components/BarChart";
-import PieChart from "../../components/PieChart";
 import GeoChart from "../../components/GeoChart";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  return (
-    <Box m="20px">
-      {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+  const StatCard = styled(Box)(({ theme }) => ({
+    gridColumn: 'span 3',
+    backgroundColor: colors.primary[400],
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: 'span 6',
+    },
+  }));
 
+  const BarBox = styled(Box)(({ theme }) => ({
+    gridRow: 'span 2',
+    gridColumn: 'span 8',
+    backgroundColor: colors.primary[400],
+    [theme.breakpoints.down('md')]: {
+      gridColumn: 'span 12',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: 'span 12',
+    },
+  }));
+
+  const TransactionsBox = styled(Box)(({ theme }) => ({
+    overflow: 'auto',
+    gridRow: 'span 2',
+    gridColumn: 'span 4',
+    backgroundColor: colors.primary[400],
+    [theme.breakpoints.down('md')]: {
+      gridColumn: 'span 6',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: 'span 12',
+    },
+  }));
+
+  const CampaignBox = styled(Box)(({ theme }) => ({
+    padding: '30px',
+    gridRow: 'span 2',
+    gridColumn: 'span 4',
+    backgroundColor: colors.primary[400],
+    [theme.breakpoints.down('md')]: {
+      gridColumn: 'span 6',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: 'span 12',
+    },
+  }));
+
+  const SalesBox = styled(Box)(({ theme }) => ({
+    gridRow: 'span 2',
+    gridColumn: 'span 4',
+    backgroundColor: colors.primary[400],
+    [theme.breakpoints.down('md')]: {
+      gridColumn: 'span 6',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: 'span 12',
+    },
+  }));
+
+  const GeoChartBox = styled(Box)(({ theme }) => ({
+    padding: '30px',
+    gridRow: 'span 2',
+    gridColumn: 'span 4',
+    backgroundColor: colors.primary[400],
+    [theme.breakpoints.down('md')]: {
+      gridColumn: 'span 6',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: 'span 12',
+    },
+  }));
+
+  const DownloadReportButton = () => {
+    const isMobile = useMediaQuery('(max-width:426px)');
+    if(isMobile){
+      return (
+        <Box>
+          <Tooltip title="Download Reports">
+            <IconButton>
+              <DownloadOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      );
+    } else {
+      return (
         <Box>
           <Button
             sx={{
@@ -38,6 +120,16 @@ const Dashboard = () => {
             Download Reports
           </Button>
         </Box>
+      );
+    }
+  };
+
+  return (
+    <Box m="20px">
+      {/* HEADER */}
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <DownloadReportButton/>
       </Box>
 
       {/* GRID & CHARTS */}
@@ -48,13 +140,7 @@ const Dashboard = () => {
         gap="20px"
       >
         {/* ROW 1 */}
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
+        <StatCard>
           <StatBox
             title="12,361"
             subtitle="Emails Sent"
@@ -66,14 +152,8 @@ const Dashboard = () => {
               />
             }
           />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
+        </StatCard>
+        <StatCard>
           <StatBox
             title="431,225"
             subtitle="Sales Obtained"
@@ -85,14 +165,8 @@ const Dashboard = () => {
               />
             }
           />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
+        </StatCard>
+        <StatCard>
           <StatBox
             title="32,441"
             subtitle="New Clients"
@@ -104,14 +178,8 @@ const Dashboard = () => {
               />
             }
           />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
+        </StatCard>
+        <StatCard>
           <StatBox
             title="1,325,134"
             subtitle="Traffic Received"
@@ -123,18 +191,14 @@ const Dashboard = () => {
               />
             }
           />
-        </Box>
+        </StatCard>
 
         {/* ROW 2 */}
-        <Box
-          gridColumn="span 8"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-        >
+        <BarBox>
           <Box
             mt="25px"
             p="0 30px"
-            display="flex "
+            display="flex"
             justifyContent="space-between"
             alignItems="center"
           >
@@ -165,13 +229,9 @@ const Dashboard = () => {
           <Box height="250px" m="-20px 0 0 0">
             <LineChart isDashboard={true} />
           </Box>
-        </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          overflow="auto"
-        >
+        </BarBox>
+
+        <TransactionsBox>
           <Box
             display="flex"
             justifyContent="space-between"
@@ -215,15 +275,10 @@ const Dashboard = () => {
               </Box>
             </Box>
           ))}
-        </Box>
+        </TransactionsBox>
 
         {/* ROW 3 */}
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          p="30px"
-        >
+        <CampaignBox>
           <Typography variant="h5" fontWeight="600">
             Campaign
           </Typography>
@@ -243,12 +298,9 @@ const Dashboard = () => {
             </Typography>
             <Typography>Includes extra misc expenditures and costs</Typography>
           </Box>
-        </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-        >
+        </CampaignBox>
+
+        <SalesBox>
           <Typography
             variant="h5"
             fontWeight="600"
@@ -259,13 +311,9 @@ const Dashboard = () => {
           <Box height="250px" mt="-20px">
             <BarChart isDashboard={true} />
           </Box>
-        </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          padding="30px"
-        >
+        </SalesBox>
+
+        <GeoChartBox>
           <Typography
             variant="h5"
             fontWeight="600"
@@ -276,7 +324,8 @@ const Dashboard = () => {
           <Box height="200px">
             <GeoChart isDashboard={true} />
           </Box>
-        </Box>
+        </GeoChartBox>
+
       </Box>
     </Box>
   );

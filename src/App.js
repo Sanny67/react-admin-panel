@@ -17,10 +17,9 @@ import LineChartPage from "./scenes/charts/line";
 import GeoChartPage from "./scenes/charts/geo";
 
 function App() {
+  const root = document.documentElement;
   const [theme, colorMode] = useMode();
   const colors = tokens(theme.palette.mode);
-
-  const root = document.documentElement;
 
   useEffect(() => {
     const scrollbarTrackColor = getComputedStyle(root).getPropertyValue('--scrollbar-track-color');
