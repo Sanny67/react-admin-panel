@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
@@ -12,6 +12,8 @@ import ContentWrapper from '../../components/ContentWrapper';
 const Team = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const isTablet = useMediaQuery('(max-width:769px)');
+    const isMobile = useMediaQuery('(max-width:710px)');
     const columns = [
       { field: "id", headerName: "ID" },
       {
@@ -82,6 +84,15 @@ const Team = () => {
             "& .MuiDataGrid-cell": {
               borderBottom: "none",
             },
+            "& .MuiDataGrid-toolbarContainer": {
+              display: "none",
+            },
+            "& .MuiDataGrid-columnHeader:not(:first-of-type), & .MuiDataGrid-cell:not(:first-of-type)": {
+              minWidth: isMobile ? "100px !important" : "unset",
+            },
+            "& .MuiDataGrid-columnHeader:last-of-type, & .MuiDataGrid-cell:last-of-type": {
+              minWidth: isTablet ? "200px !important" : isMobile ? "180px !important" : "unset",
+            },
             "& .name-column--cell": {
               color: colors.greenAccent[300],
             },
@@ -101,7 +112,12 @@ const Team = () => {
             },
           }}
         >
-          <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
+          {/* <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} /> */}
+          <DataGrid
+            checkboxSelection
+            rows={mockDataTeam}
+            columns={columns}
+          />
         </ContentWrapper>
       </Box>
     );

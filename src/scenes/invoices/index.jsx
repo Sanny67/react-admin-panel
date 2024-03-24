@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataInvoices } from "../../data/mockData";
@@ -8,6 +8,8 @@ import ContentWrapper from "../../components/ContentWrapper";
 const Invoices = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isTablet = useMediaQuery('(max-width:769px)');
+  const isMobile = useMediaQuery('(max-width:710px)');
   const columns = [
     { field: "id", headerName: "ID" },
     {
@@ -54,6 +56,12 @@ const Invoices = () => {
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+          },
+          "& .MuiDataGrid-toolbarContainer": {
+              display: "none",
+          },
+          "& .MuiDataGrid-columnHeader:not(:first-of-type), & .MuiDataGrid-cell:not(:first-of-type)": {
+            minWidth: isTablet ? "140px !important" : "unset",
           },
           "& .name-column--cell": {
             color: colors.greenAccent[300],

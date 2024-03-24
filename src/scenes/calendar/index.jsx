@@ -7,18 +7,27 @@ import listPlugin from "@fullcalendar/list";
 import { formatDate } from "@fullcalendar/core"; // Corrected import
 import {
   Box,
+  IconButton,
   List,
   ListItem,
   ListItemText,
+  Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const Calendar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const isTablet = useMediaQuery('(max-width: 769px)');
+    const isMobile = useMediaQuery('(max-width: 710px)');
+
+    const [showEventsBar, setShowEventsBar] = useState(false);
     const [currentEvents, setCurrentEvents] = useState([]);
     
     const handleDateClick = (selected) => {
@@ -54,9 +63,61 @@ const Calendar = () => {
                 subtitle="Full Calendar Interactive Page"
             />
             
-            <Box display="flex" justifyContent="space-between">
+            <Box display="flex" justifyContent="space-between" position="relative">
                 {/* CALENDAR SIDEBAR */}
-                <Box
+                {isMobile ? <Box
+                    p="15px"
+                    zIndex={9}
+                    height="100%"
+                    flex="1 1 20%"
+                    borderRadius="4px"
+                    position="absolute"
+                    transition="all 0.3s ease"
+                    backgroundColor={colors.primary[400]}
+                    left={showEventsBar ? "-5vw" : "-100vw"}
+                    width={showEventsBar ? "100vw" : "95vw"}
+                >
+                    <Box display="flex" justifyContent="space-between" position="relative" >
+                        <Typography variant="h5">Events</Typography>
+                        <Tooltip title="Close">
+                            <IconButton sx={{paddingTop: 0}} onClick={() => {setShowEventsBar(!showEventsBar)}}>
+                                <CloseIcon/>
+                            </IconButton>
+                        </Tooltip>
+                        <Box borderRadius="0 8px 8px 0" position="absolute" top="-15px" left="calc(100% + 12px)" backgroundColor={colors.primary[400]} >
+                            <Tooltip title="Close">
+                                <IconButton onClick={() => {setShowEventsBar(!showEventsBar)}}>
+                                    <ArrowForwardIosIcon/>
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+                    </Box>
+                    <List>
+                        {currentEvents.map(event => (
+                            <ListItem
+                                key={event.id}
+                                sx={{
+                                    backgroundColor: colors.greenAccent[500],
+                                    margin: "10px 0",
+                                    borderRadius: "2px"
+                                }}
+                            >
+                                <ListItemText
+                                primary={event.title}
+                                secondary={
+                                    <Typography>
+                                        {formatDate(event.start, {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "numeric"
+                                        })}
+                                    </Typography>
+                                }
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
+                </Box> : <Box
                     flex="1 1 20%"
                     backgroundColor={colors.primary[400]}
                     p="15px"
@@ -88,7 +149,7 @@ const Calendar = () => {
                             </ListItem>
                         ))}
                     </List>
-                </Box>
+                </Box>}
 
                 {/* CALENDAR */}
                 <Box flex="1 1 100%" ml="15px">
@@ -107,10 +168,10 @@ const Calendar = () => {
                         dayMaxEvents={true}
                         select={handleDateClick}
                         eventClick={handleEventClick}
-                        eventsSet={(events) => setCurrentEvents(events)}
+                        eventsSet={events => setCurrentEvents(events)}
                         initialEvents={[
                             {id: "1234", title: "All-day-event", date: "2024-03-25"},
-                            {id: "1235", title: "Timed-event", date: "2024-03-28"}
+                            {id: "1235", title: "Timed-event", date: "2024-03-28 09:30:00"}
                         ]}
                     />
                 </Box>

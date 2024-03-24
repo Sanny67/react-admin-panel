@@ -22,7 +22,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 const Item = ({ title, to, icon, selected, setSelected, setIsCollapsed }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const isMobile = useMediaQuery('(max-width:426px)');
+    const isTablet = useMediaQuery('(max-width: 769px)');
 
     return (
       <MenuItem
@@ -33,7 +33,7 @@ const Item = ({ title, to, icon, selected, setSelected, setIsCollapsed }) => {
         }}
         onClick={() => {
             setSelected(title);
-            if(isMobile) setIsCollapsed(false);
+            if(isTablet) setIsCollapsed(true);
         }}
         component={<Link to={to} />}
       >
@@ -45,13 +45,13 @@ const Item = ({ title, to, icon, selected, setSelected, setIsCollapsed }) => {
 const Sidebar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const isMobile = useMediaQuery('(max-width:426px)');
-    const [isCollapsed, setIsCollapsed] = useState(isMobile ? true : false);
+    const isTablet = useMediaQuery('(max-width: 769px)');
+    const [isCollapsed, setIsCollapsed] = useState(isTablet ? true : false);
     const [selected, setSelected] = useState("Dashboard");
 
     return (
         <>
-            {isMobile && <Box position="absolute" top={0} left={0} padding="15px 10px" onClick={() => setIsCollapsed(!isCollapsed)}>
+            {isTablet && <Box position="absolute" top={0} left={0} padding="15px 10px" onClick={() => setIsCollapsed(!isCollapsed)}>
                 <IconButton>
                     <MenuIcon/>
                 </IconButton>
@@ -61,8 +61,8 @@ const Sidebar = () => {
                 rootStyles={{
                     height: '100%',
                     border: 'none',
-                    width: isMobile ? (isCollapsed ? ' 0 !important' : '100%') : "auto",
-                    minWidth: isMobile ? (isCollapsed ? ' 0 !important' : '100%') : "auto",
+                    width: isTablet ? (isCollapsed ? ' 0 !important' : '100vw') : "auto",
+                    minWidth: isTablet ? (isCollapsed ? ' 0 !important' : '100vw') : "auto",
                     background: `${colors.primary[400]} !important`,
                     "& *": {
                         background: `transparent !important`,
@@ -88,7 +88,7 @@ const Sidebar = () => {
                     }}
                     rootStyles={{
                         background: `${colors.primary[400]} !important`,
-                        padding: isMobile ? "5px" : "5px 20px 20px" + "!important",
+                        padding: isTablet ? "5px" : "5px 20px 20px" + "!important",
                         '& .ps-menuitem-root.main-menu .ps-menu-button': {
                             padding: 0,
                         },
