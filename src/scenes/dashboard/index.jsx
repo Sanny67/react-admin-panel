@@ -46,6 +46,9 @@ const Dashboard = () => {
     gridRow: 'span 2',
     gridColumn: 'span 4',
     backgroundColor: colors.primary[400],
+    "& .MuiBox-root":{
+      borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+    },
     [theme.breakpoints.down('md')]: {
       gridColumn: 'span 6',
     },

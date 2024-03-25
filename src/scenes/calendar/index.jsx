@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
-import { formatDate } from "@fullcalendar/core"; // Corrected import
+import { formatDate } from "@fullcalendar/core";
 import {
   Box,
   IconButton,
@@ -72,12 +72,13 @@ const Calendar = () => {
                     flex="1 1 20%"
                     borderRadius="4px"
                     position="absolute"
-                    transition="all 0.3s ease"
+                    sx={{transition: "all 0.3s ease"}}
                     backgroundColor={colors.primary[400]}
+                    top={"-30px"}
                     left={showEventsBar ? "-5vw" : "-100vw"}
                     width={showEventsBar ? "100vw" : "95vw"}
                 >
-                    <Box display="flex" justifyContent="space-between" position="relative" >
+                    <Box display="flex" justifyContent="space-between" position="relative" sx={{transition: "all 0.3s ease"}} >
                         <Typography variant="h5">Events</Typography>
                         <Tooltip title="Close">
                             <IconButton sx={{paddingTop: 0}} onClick={() => {setShowEventsBar(!showEventsBar)}}>
@@ -152,11 +153,42 @@ const Calendar = () => {
                 </Box>}
 
                 {/* CALENDAR */}
-                <Box flex="1 1 100%" ml="15px">
+                <Box flex="1 1 100%" ml={isMobile ? "0px" : "15px"} sx={isMobile ? {
+                            "& .fc-header-toolbar": {
+                                display: 'grid',
+                                gridTemplateColumns: '1fr 1fr',
+                                gridTemplateRows: 'auto auto',
+                            },
+                            "& .fc-header-toolbar .fc-toolbar-chunk:first-child": {
+                                display: 'flex',
+                                gridColumn: '1 / span 2',
+                                justifyContent: 'space-between',
+                                marginBottom: '10px',
+                            },
+                            "& .fc-button-primary": {
+                                borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+                                backgroundColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+                            },
+                            "& .fc-button-active, & .fc-button-primary:active, & .fc-button-primary:hover": {
+                                borderColor: `${colors.primary[200]} !important`,
+                                backgroundColor: theme.palette.mode==="light" ? `${colors.primary[200]} !important` : "unset",
+                            },
+                            "& .fc-button-primary:disabled": {
+                                borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+                                backgroundColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+                            },
+                            "& .fc-list-day-cushion": {
+                                backgroundColor: colors.primary[400]
+                            },
+                        } : {}}>
                     <FullCalendar
                         height="70vh"
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
-                        headerToolbar={{
+                        headerToolbar={isMobile ? {
+                            start: 'title prev,next',
+                            center: 'today',
+                            end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                        } : {
                             left:"prev, next today",
                             center: "title",
                             right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth"
