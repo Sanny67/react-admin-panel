@@ -1,99 +1,135 @@
-import { Box, Button, IconButton, Typography, useTheme, useMediaQuery, Tooltip } from "@mui/material";
-import { styled } from "@mui/system";
+import React, { Suspense } from "react";
+import { Box, Button, IconButton, Typography, useTheme, useMediaQuery, Tooltip, CircularProgress } from "@mui/material";
 import { tokens } from "../../theme";
+import { styled } from "@mui/system";
 import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import EmailIcon from "@mui/icons-material/Email";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/Header";
-import StatBox from "../../components/StatBox";
-import ProgressCircle from "../../components/ProgressCircle";
-import LineChart from "../../components/LineChart";
-import BarChart from "../../components/BarChart";
-import GeoChart from "../../components/GeoChart";
+
+// import EmailsStatCard from "../../components/dashboard/EmailsStatCard";
+// import SalesStatCard from "../../components/dashboard/SalesStatCard";
+// import NewClientsStatCard from "../../components/dashboard/NewClientsStatCard";
+// import TrafficStatCard from "../../components/dashboard/TrafficStatCard";
+// import BarBox from "../../components/dashboard/BarBox";
+// import TransactionsBox from "../../components/dashboard/TransactionsBox";
+import CampaignBox from "../../components/dashboard/CampaignBox";
+import SalesBox from "../../components/dashboard/SalesBox";
+import GeoChartBox from "../../components/dashboard/GeoChartBox";
+import StatCard from "../../components/dashboard/StatCard";
+
+const EmailsStatCard = React.lazy(() => import('../../components/dashboard/EmailsStatCard'));
+const SalesStatCard = React.lazy(() => import('../../components/dashboard/SalesStatCard'));
+const NewClientsStatCard = React.lazy(() => import('../../components/dashboard/NewClientsStatCard'));
+const TrafficStatCard = React.lazy(() => import('../../components/dashboard/TrafficStatCard'));
+
+const BarBox = React.lazy(() => import('../../components/dashboard/BarBox'));
+const TransactionsBox = React.lazy(() => import('../../components/dashboard/TransactionsBox'));
+// const BarChart = React.lazy(() => import('../../components/BarChart'));
+// const GeoChart = React.lazy(() => import('../../components/GeoChart'));
+// const ProgressCircle = React.lazy(() => import('../../components/ProgressCircle'));
+
+const CardLoader = () => {
+  return (
+    <Box height="100%" width="100%" display="flex" justifyContent="center" alignItems="center">
+      <CircularProgress style={{ color: '#fff' }} />
+    </Box>
+  )
+};
+
+const BarBoxWrapper = styled(Box)(({ theme }) => {
+  const theme1 = useTheme();
+  const colors = tokens(theme1.palette.mode);
+  
+  return{
+      gridRow: 'span 2',
+      gridColumn: 'span 8',
+      backgroundColor: colors.primary[400],
+      [theme.breakpoints.down('md')]: {
+          gridColumn: 'span 12',
+      },
+      [theme.breakpoints.down('sm')]: {
+          gridColumn: 'span 12',
+      },
+  }
+});
+
+const TransactionsBoxWrapper = styled(Box)(({ theme }) => {
+  const theme1 = useTheme();
+  const colors = tokens(theme1.palette.mode);
+
+  return{
+      overflow: 'auto',
+      gridRow: 'span 2',
+      gridColumn: 'span 4',
+      backgroundColor: colors.primary[400],
+      "& .MuiBox-root":{
+          borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+      },
+      [theme.breakpoints.down('md')]: {
+          gridColumn: 'span 6',
+      },
+      [theme.breakpoints.down('sm')]: {
+          gridColumn: 'span 12',
+      },
+  }
+});
+
+const CampaignBoxWrapper = styled(Box)(({ theme }) => {
+  const theme1 = useTheme();
+  const colors = tokens(theme1.palette.mode);
+
+  return{
+      padding: '30px',
+      gridRow: 'span 2',
+      gridColumn: 'span 4',
+      backgroundColor: colors.primary[400],
+      [theme.breakpoints.down('md')]: {
+          gridColumn: 'span 6',
+      },
+      [theme.breakpoints.down('sm')]: {
+          gridColumn: 'span 12',
+      },
+  }
+});
+
+const SalesBoxWrapper = styled(Box)(({ theme }) => {
+  const theme1 = useTheme();
+  const colors = tokens(theme1.palette.mode);
+
+  return{
+      gridRow: 'span 2',
+      gridColumn: 'span 4',
+      backgroundColor: colors.primary[400],
+      [theme.breakpoints.down('md')]: {
+          gridColumn: 'span 6',
+      },
+      [theme.breakpoints.down('sm')]: {
+          gridColumn: 'span 12',
+      },
+  }
+});
+
+const GeoChartBoxWrapper = styled(Box)(({ theme }) => {
+  const theme1 = useTheme();
+  const colors = tokens(theme1.palette.mode);
+
+  return{
+      padding: '30px',
+      gridRow: 'span 2',
+      gridColumn: 'span 4',
+      backgroundColor: colors.primary[400],
+      [theme.breakpoints.down('md')]: {
+          gridColumn: 'span 6',
+      },
+      [theme.breakpoints.down('sm')]: {
+          gridColumn: 'span 12',
+      },
+  }
+});
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
-  const StatCard = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 3',
-    backgroundColor: colors.primary[400],
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    [theme.breakpoints.down('sm')]: {
-      gridColumn: 'span 6',
-    },
-  }));
-
-  const BarBox = styled(Box)(({ theme }) => ({
-    gridRow: 'span 2',
-    gridColumn: 'span 8',
-    backgroundColor: colors.primary[400],
-    [theme.breakpoints.down('md')]: {
-      gridColumn: 'span 12',
-    },
-    [theme.breakpoints.down('sm')]: {
-      gridColumn: 'span 12',
-    },
-  }));
-
-  const TransactionsBox = styled(Box)(({ theme }) => ({
-    overflow: 'auto',
-    gridRow: 'span 2',
-    gridColumn: 'span 4',
-    backgroundColor: colors.primary[400],
-    "& .MuiBox-root":{
-      borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
-    },
-    [theme.breakpoints.down('md')]: {
-      gridColumn: 'span 6',
-    },
-    [theme.breakpoints.down('sm')]: {
-      gridColumn: 'span 12',
-    },
-  }));
-
-  const CampaignBox = styled(Box)(({ theme }) => ({
-    padding: '30px',
-    gridRow: 'span 2',
-    gridColumn: 'span 4',
-    backgroundColor: colors.primary[400],
-    [theme.breakpoints.down('md')]: {
-      gridColumn: 'span 6',
-    },
-    [theme.breakpoints.down('sm')]: {
-      gridColumn: 'span 12',
-    },
-  }));
-
-  const SalesBox = styled(Box)(({ theme }) => ({
-    gridRow: 'span 2',
-    gridColumn: 'span 4',
-    backgroundColor: colors.primary[400],
-    [theme.breakpoints.down('md')]: {
-      gridColumn: 'span 6',
-    },
-    [theme.breakpoints.down('sm')]: {
-      gridColumn: 'span 12',
-    },
-  }));
-
-  const GeoChartBox = styled(Box)(({ theme }) => ({
-    padding: '30px',
-    gridRow: 'span 2',
-    gridColumn: 'span 4',
-    backgroundColor: colors.primary[400],
-    [theme.breakpoints.down('md')]: {
-      gridColumn: 'span 6',
-    },
-    [theme.breakpoints.down('sm')]: {
-      gridColumn: 'span 12',
-    },
-  }));
 
   const DownloadReportButton = () => {
     const isMobile = useMediaQuery('(max-width:426px)');
@@ -144,190 +180,66 @@ const Dashboard = () => {
       >
         {/* ROW 1 */}
         <StatCard>
-          <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
-            progress="0.75"
-            increase="+14%"
-            icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
+          <Suspense fallback={<CardLoader/>}>
+            <EmailsStatCard/>
+          </Suspense>
         </StatCard>
+
         <StatCard>
-          <StatBox
-            title="431,225"
-            subtitle="Sales Obtained"
-            progress="0.50"
-            increase="+21%"
-            icon={
-              <PointOfSaleIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
+          <Suspense fallback={<CardLoader/>}>
+            <SalesStatCard/>
+          </Suspense>
         </StatCard>
+
         <StatCard>
-          <StatBox
-            title="32,441"
-            subtitle="New Clients"
-            progress="0.30"
-            increase="+5%"
-            icon={
-              <PersonAddIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
+          <Suspense fallback={<CardLoader/>}>
+            <NewClientsStatCard/>
+          </Suspense>
         </StatCard>
+
         <StatCard>
-          <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
-            progress="0.80"
-            increase="+43%"
-            icon={
-              <TrafficIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
+          <Suspense fallback={<CardLoader/>}>
+            <TrafficStatCard/>
+          </Suspense>
         </StatCard>
+
+
 
         {/* ROW 2 */}
-        <BarBox>
-          <Box
-            mt="25px"
-            p="0 30px"
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box>
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                color={colors.grey[100]}
-              >
-                Revenue Generated
-              </Typography>
-              <Typography
-                variant="h3"
-                fontWeight="bold"
-                color={colors.greenAccent[500]}
-              >
-                $59,342.32
-              </Typography>
-            </Box>
-            <Box>
-              <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                />
-              </IconButton>
-            </Box>
-          </Box>
-          <Box height="250px" m="-20px 0 0 0">
-            <LineChart isDashboard={true} />
-          </Box>
-        </BarBox>
+        <BarBoxWrapper>
+          <Suspense fallback={<CardLoader/>}>
+            <BarBox/>
+          </Suspense>
+        </BarBoxWrapper>
 
-        <TransactionsBox>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
-            colors={colors.grey[100]}
-            p="15px"
-          >
-            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Transactions
-            </Typography>
-          </Box>
-          {mockTransactions.map((transaction, i) => (
-            <Box
-              key={`${transaction.txId}-${i}`}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
-            >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[500]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {transaction.txId}
-                </Typography>
-                <Typography color={colors.grey[100]}>
-                  {transaction.user}
-                </Typography>
-              </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
-              <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
-              >
-                ${transaction.cost}
-              </Box>
-            </Box>
-          ))}
-        </TransactionsBox>
+        <TransactionsBoxWrapper>
+          <Suspense fallback={<CardLoader/>}>
+            <TransactionsBox/>
+          </Suspense>
+        </TransactionsBoxWrapper>
 
+
+        
         {/* ROW 3 */}
-        <CampaignBox>
-          <Typography variant="h5" fontWeight="600">
-            Campaign
-          </Typography>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            mt="25px"
-          >
-            <ProgressCircle size="125" />
-            <Typography
-              variant="h5"
-              color={colors.greenAccent[500]}
-              sx={{ mt: "15px" }}
-            >
-              $48,352 revenue generated
-            </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
-          </Box>
-        </CampaignBox>
+        <CampaignBoxWrapper>
+          <Suspense fallback={<CardLoader/>}>
+            <CampaignBox/>
+          </Suspense>
+        </CampaignBoxWrapper>
 
-        <SalesBox>
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ padding: "30px 30px 0 30px" }}
-          >
-            Sales Quantity
-          </Typography>
-          <Box height="250px" mt="-20px">
-            <BarChart isDashboard={true} />
-          </Box>
-        </SalesBox>
 
-        <GeoChartBox>
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ marginBottom: "15px" }}
-          >
-            Geography Based Traffic
-          </Typography>
-          <Box height="200px">
-            <GeoChart isDashboard={true} />
-          </Box>
-        </GeoChartBox>
+        <SalesBoxWrapper>
+          <Suspense fallback={<CardLoader/>}>
+            <SalesBox/>
+          </Suspense>
+        </SalesBoxWrapper>
+
+        <GeoChartBoxWrapper>
+          <Suspense fallback={<CardLoader/>}>
+            <GeoChartBox/>
+          </Suspense>
+        </GeoChartBoxWrapper>
+
 
       </Box>
     </Box>
