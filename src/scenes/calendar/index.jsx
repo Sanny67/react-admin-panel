@@ -39,6 +39,7 @@ const Calendar = () => {
     };
 
     const saveEvent = (params) => {
+        console.log("params", params)
         const calendarApi = params.view.calendar;
         calendarApi.unselect();
     
@@ -215,8 +216,7 @@ const Calendar = () => {
                         eventsSet={events => setCurrentEvents(events)}
                         initialEvents={[
                             {id: "1234", title: "All-day-event", date: "2024-03-25"},
-                            {id: "1235", title: "Timed-event", date: "2024-03-28"}
-                            // {id: "1235", title: "Timed-event", date: "2024-03-28 09:30:00"}
+                            {id: "1236", title: "Timed-event", allDay: false, start: "2024-03-28T21:30:00", end: "2024-03-28T23:30:00"}
                         ]}
                     />
                 </Box>
