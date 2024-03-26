@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, IconButton, InputBase, useTheme } from '@mui/material';
+import { Box, IconButton, InputBase, useMediaQuery, useTheme } from '@mui/material';
 import { ColorModeContext, tokens } from '../../theme';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
@@ -12,9 +12,10 @@ const Topbar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
+    const isTablet = useMediaQuery('(max-width: 769px)');
 
     return (
-        <Box display="flex" justifyContent="space-between" p={2} marginLeft="40px">            
+        <Box display="flex" justifyContent="space-between" p={2} marginLeft={isTablet ? "40px" : "0px"}>            
             {/* SEARCH BAR */}
             <Box
                 display="flex"

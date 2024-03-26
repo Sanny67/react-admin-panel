@@ -20,30 +20,35 @@ import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import SaveEvent from "../../components/SaveEvent";
 
 const Calendar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const isTablet = useMediaQuery('(max-width: 769px)');
     const isMobile = useMediaQuery('(max-width: 710px)');
+    const isTablet = useMediaQuery('(max-width: 769px)');
 
-    const [showEventsBar, setShowEventsBar] = useState(false);
     const [currentEvents, setCurrentEvents] = useState([]);
+    const [showEventsBar, setShowEventsBar] = useState(false);
+    const [openEventSaveModal, setOpenEventSaveModal] = useState(false);
+    const [selectedDateEvent, setSelectedDateEvent] = useState({});
     
     const handleDateClick = (selected) => {
-        const title = prompt("Please enter a new title for your event");
-        const calendarApi = selected.view.calendar;
+        setOpenEventSaveModal(true);
+        setSelectedDateEvent(selected);
+    };
+
+    const saveEvent = (params) => {
+        const calendarApi = params.view.calendar;
         calendarApi.unselect();
     
-        if (title) {
-          calendarApi.addEvent({
-            id: `${selected.dateStr}-${title}`,
-            title,
-            start: selected.startStr,
-            end: selected.endStr,
-            allDay: selected.allDay,
-          });
-        }
+        calendarApi.addEvent({
+            id: `${params.dateStr}-${params.title}`,
+            title: params.title,
+            start: params.startStr,
+            end: params.endStr,
+            allDay: params.allDay,
+        });
     };
 
     const handleEventClick = (selected) => {
@@ -54,6 +59,48 @@ const Calendar = () => {
         ) {
           selected.event.remove();
         }
+    };
+
+    const lightThemeCalenderStyles = {
+        "& .fc-button-primary": {
+            borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+            backgroundColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+        },
+        "& .fc-button-active, & .fc-button-primary:active, & .fc-button-primary:hover": {
+            borderColor: `${colors.primary[200]} !important`,
+            backgroundColor: theme.palette.mode==="light" ? `${colors.primary[200]} !important` : "unset",
+        },
+        "& .fc-button-primary:disabled": {
+            borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+            backgroundColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
+        },
+        "& .fc-list-day-cushion": {
+            backgroundColor: colors.primary[400]
+        },
+    };
+
+    const mobileVersionCalendarStyles = isMobile ? {
+        "& .fc-header-toolbar": {
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridTemplateRows: 'auto auto',
+        },
+        "& .fc-header-toolbar .fc-toolbar-chunk:first-child": {
+            display: 'flex',
+            gridColumn: '1 / span 2',
+            justifyContent: 'space-between',
+            marginBottom: '10px',
+        },
+    } : {};
+
+    const headerToolbar = isMobile ? {
+        start: 'title prev,next',
+        center: 'today',
+        end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+    } : {
+        left:"prev,next today",
+        center: "title",
+        right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth"
     };
 
     return (
@@ -119,10 +166,10 @@ const Calendar = () => {
                         ))}
                     </List>
                 </Box> : <Box
-                    flex="1 1 20%"
-                    backgroundColor={colors.primary[400]}
                     p="15px"
+                    flex="1 1 20%"
                     borderRadius="4px"
+                    backgroundColor={colors.primary[400]}
                 >
                     <Typography variant="h5">Events</Typography>
                     <List>
@@ -136,16 +183,16 @@ const Calendar = () => {
                                 }}
                             >
                                 <ListItemText
-                                primary={event.title}
-                                secondary={
-                                    <Typography>
-                                        {formatDate(event.start, {
-                                            year: "numeric",
-                                            month: "short",
-                                            day: "numeric"
-                                        })}
-                                    </Typography>
-                                }
+                                    primary={event.title}
+                                    secondary={
+                                        <Typography>
+                                            {formatDate(event.start, {
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "numeric"
+                                            })}
+                                        </Typography>
+                                    }
                                 />
                             </ListItem>
                         ))}
@@ -153,46 +200,11 @@ const Calendar = () => {
                 </Box>}
 
                 {/* CALENDAR */}
-                <Box flex="1 1 100%" ml={isMobile ? "0px" : "15px"} sx={isMobile ? {
-                            "& .fc-header-toolbar": {
-                                display: 'grid',
-                                gridTemplateColumns: '1fr 1fr',
-                                gridTemplateRows: 'auto auto',
-                            },
-                            "& .fc-header-toolbar .fc-toolbar-chunk:first-child": {
-                                display: 'flex',
-                                gridColumn: '1 / span 2',
-                                justifyContent: 'space-between',
-                                marginBottom: '10px',
-                            },
-                            "& .fc-button-primary": {
-                                borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
-                                backgroundColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
-                            },
-                            "& .fc-button-active, & .fc-button-primary:active, & .fc-button-primary:hover": {
-                                borderColor: `${colors.primary[200]} !important`,
-                                backgroundColor: theme.palette.mode==="light" ? `${colors.primary[200]} !important` : "unset",
-                            },
-                            "& .fc-button-primary:disabled": {
-                                borderColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
-                                backgroundColor: theme.palette.mode==="light" ? colors.primary[300] : "unset",
-                            },
-                            "& .fc-list-day-cushion": {
-                                backgroundColor: colors.primary[400]
-                            },
-                        } : {}}>
+                <Box flex="1 1 100%" ml={isMobile ? "0px" : "15px"} sx={{ ...lightThemeCalenderStyles, ...mobileVersionCalendarStyles }}>
                     <FullCalendar
                         height="70vh"
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
-                        headerToolbar={isMobile ? {
-                            start: 'title prev,next',
-                            center: 'today',
-                            end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-                        } : {
-                            left:"prev, next today",
-                            center: "title",
-                            right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth"
-                        }}
+                        headerToolbar={{...headerToolbar}}
                         initialView="dayGridMonth"
                         editable={true}
                         selectable={true}
@@ -203,11 +215,19 @@ const Calendar = () => {
                         eventsSet={events => setCurrentEvents(events)}
                         initialEvents={[
                             {id: "1234", title: "All-day-event", date: "2024-03-25"},
-                            {id: "1235", title: "Timed-event", date: "2024-03-28 09:30:00"}
+                            {id: "1235", title: "Timed-event", date: "2024-03-28"}
+                            // {id: "1235", title: "Timed-event", date: "2024-03-28 09:30:00"}
                         ]}
                     />
                 </Box>
             </Box>
+
+            <SaveEvent
+                saveEvent={saveEvent}
+                open={openEventSaveModal}
+                setOpen={setOpenEventSaveModal}
+                selectedDateEvent={selectedDateEvent}
+            />
         </Box>
     );
 };
