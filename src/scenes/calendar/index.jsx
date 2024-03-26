@@ -21,6 +21,40 @@ import { tokens } from "../../theme";
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SaveEvent from "../../components/SaveEvent";
+import ContentWrapper from "../../components/ContentWrapper";
+
+const EventsList = ({currentEvents}) => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+
+    return (
+        <List>
+            {currentEvents.map(event => (
+                <ListItem
+                    key={event.id}
+                    sx={{
+                        backgroundColor: colors.greenAccent[500],
+                        margin: "10px 0",
+                        borderRadius: "2px"
+                    }}
+                >
+                    <ListItemText
+                    primary={event.title}
+                    secondary={
+                        <Typography>
+                            {formatDate(event.start, {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric"
+                            })}
+                        </Typography>
+                    }
+                    />
+                </ListItem>
+            ))}
+        </List>
+    );
+};
 
 const Calendar = () => {
     const theme = useTheme();
@@ -105,7 +139,7 @@ const Calendar = () => {
     };
 
     return (
-        <Box m="20px">
+        <ContentWrapper sx={{margin: "20px"}}>
             <Header
                 title="Calendar"
                 subtitle="Full Calendar Interactive Page"
@@ -116,17 +150,17 @@ const Calendar = () => {
                 {isMobile ? <Box
                     p="15px"
                     zIndex={9}
-                    height="100%"
+                    height="75vh"
                     flex="1 1 20%"
                     borderRadius="4px"
                     position="absolute"
-                    sx={{transition: "all 0.3s ease"}}
+                    sx={{ transition: "all 0.3s ease" }}
                     backgroundColor={colors.primary[400]}
                     top={"-30px"}
                     left={showEventsBar ? "-5vw" : "-100vw"}
                     width={showEventsBar ? "100vw" : "95vw"}
                 >
-                    <Box display="flex" justifyContent="space-between" position="relative" sx={{transition: "all 0.3s ease"}} >
+                    <Box display="flex" justifyContent="space-between" position="relative" sx={{ transition: "all 0.3s ease"}} >
                         <Typography variant="h5">Events</Typography>
                         <Tooltip title="Close">
                             <IconButton sx={{paddingTop: 0}} onClick={() => {setShowEventsBar(!showEventsBar)}}>
@@ -134,70 +168,24 @@ const Calendar = () => {
                             </IconButton>
                         </Tooltip>
                         <Box borderRadius="0 8px 8px 0" position="absolute" top="-15px" left="calc(100% + 12px)" backgroundColor={colors.primary[400]} >
-                            <Tooltip title="Close">
+                            <Tooltip title="Show Events">
                                 <IconButton onClick={() => {setShowEventsBar(!showEventsBar)}}>
                                     <ArrowForwardIosIcon/>
                                 </IconButton>
                             </Tooltip>
                         </Box>
                     </Box>
-                    <List>
-                        {currentEvents.map(event => (
-                            <ListItem
-                                key={event.id}
-                                sx={{
-                                    backgroundColor: colors.greenAccent[500],
-                                    margin: "10px 0",
-                                    borderRadius: "2px"
-                                }}
-                            >
-                                <ListItemText
-                                primary={event.title}
-                                secondary={
-                                    <Typography>
-                                        {formatDate(event.start, {
-                                            year: "numeric",
-                                            month: "short",
-                                            day: "numeric"
-                                        })}
-                                    </Typography>
-                                }
-                                />
-                            </ListItem>
-                        ))}
-                    </List>
+                    <EventsList currentEvents={currentEvents} />
                 </Box> : <Box
                     p="15px"
+                    height="70vh"
                     flex="1 1 20%"
+                    overflow="scroll"
                     borderRadius="4px"
                     backgroundColor={colors.primary[400]}
                 >
                     <Typography variant="h5">Events</Typography>
-                    <List>
-                        {currentEvents.map(event => (
-                            <ListItem
-                                key={event.id}
-                                sx={{
-                                    backgroundColor: colors.greenAccent[500],
-                                    margin: "10px 0",
-                                    borderRadius: "2px"
-                                }}
-                            >
-                                <ListItemText
-                                    primary={event.title}
-                                    secondary={
-                                        <Typography>
-                                            {formatDate(event.start, {
-                                                year: "numeric",
-                                                month: "short",
-                                                day: "numeric"
-                                            })}
-                                        </Typography>
-                                    }
-                                />
-                            </ListItem>
-                        ))}
-                    </List>
+                    <EventsList currentEvents={currentEvents} />
                 </Box>}
 
                 {/* CALENDAR */}
@@ -216,7 +204,7 @@ const Calendar = () => {
                         eventsSet={events => setCurrentEvents(events)}
                         initialEvents={[
                             {id: "1234", title: "All-day-event", date: "2024-03-25"},
-                            {id: "1236", title: "Timed-event", allDay: false, start: "2024-03-28T21:30:00", end: "2024-03-28T23:30:00"}
+                            {id: "1235", title: "Timed-event", allDay: false, start: "2024-03-28T21:30:00", end: "2024-03-28T23:30:00"},
                         ]}
                     />
                 </Box>
@@ -228,7 +216,7 @@ const Calendar = () => {
                 setOpen={setOpenEventSaveModal}
                 selectedDateEvent={selectedDateEvent}
             />
-        </Box>
+        </ContentWrapper>
     );
 };
 
