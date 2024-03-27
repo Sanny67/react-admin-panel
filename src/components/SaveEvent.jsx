@@ -12,7 +12,7 @@ import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 // import 'react-clock/dist/Clock.css';
 
-const SaveEvent = ({open, setOpen, saveEvent, selectedDateEvent}) => {
+const SaveEvent = ({open, setOpen, saveEvent, currentView, selectedDateEvent}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -25,6 +25,14 @@ const SaveEvent = ({open, setOpen, saveEvent, selectedDateEvent}) => {
 
   const [formData, setFormData] = useState(inititalValues);
   const [errors, setErrors] = useState(inititalValues);
+
+  useEffect(() => {
+    if(open && currentView === "timeGridDay") {
+      const startTime = `${selectedDateEvent.start.getHours()}:${selectedDateEvent.start.getMinutes()},${selectedDateEvent.start.getSeconds()}`;
+      const endTime = `${selectedDateEvent.end.getHours()}:${selectedDateEvent.end.getMinutes()},${selectedDateEvent.end.getSeconds()}`;
+      setFormData({ ...formData, allDay: false, startTime: startTime, endTime: endTime })
+    }
+  }, [open]);
 
   const handleClose = () => {
     setOpen(false);
@@ -69,6 +77,18 @@ const SaveEvent = ({open, setOpen, saveEvent, selectedDateEvent}) => {
     }
   };
 
+  const timepickerBoxStyles = {
+    mr: 2,
+    gridRow: 2,
+    display: "flex",
+    flexDirection: "column",
+    "& .react-time-picker--disabled": theme.palette.mode==="dark" ? {
+      color: '#fff',
+      opacity: 0.6,
+      backgroundColor: 'transparent'
+    } : {}
+  };
+
   return (
     <>
       <Dialog
@@ -107,17 +127,25 @@ const SaveEvent = ({open, setOpen, saveEvent, selectedDateEvent}) => {
             >
               <FormControlLabel value="allDay" control={<Radio color="secondary" />} label="All Day"  sx={{gridRow: 1, gridColumn: 1}} />
               <FormControlLabel value="timed" control={<Radio color="secondary" />} label="Timed" sx={{gridRow: 2, gridColumn: 1}} />
-              <Box sx={{
-                gridRow: 2,
-                gridColumn: 2,
-                "& .react-time-picker--disabled": theme.palette.mode==="dark" ? {
-                  color: '#fff',
-                  opacity: 0.6,
-                  backgroundColor: 'transparent'
-                } : {}
-              }}>
-                <TimePicker onChange={val => handleInput("startTime" , val)} value={formData.startTime} disableClock={true} disabled={formData.allDay ? true : false} />
-                <TimePicker onChange={val => handleInput("endTime" , val)} value={formData.endTime} disableClock={true} disabled={formData.allDay ? true : false} />
+              <Box sx={{...timepickerBoxStyles, gridRow: 2, gridColumn: 2}}>
+                <Typography component="small">Start</Typography>
+                <TimePicker
+                  disableClock={true}
+                  value={formData.startTime}
+                  nativeInputAriaLabel="Start Time"
+                  disabled={formData.allDay ? true : false}
+                  onChange={val => handleInput("startTime" , val)}
+                />
+              </Box>
+              <Box sx={{...timepickerBoxStyles, gridColumn: 3}}>
+                <Typography component="small">End</Typography>
+                <TimePicker
+                  disableClock={true}
+                  value={formData.endTime}
+                  nativeInputAriaLabel="End Time"
+                  disabled={formData.allDay ? true : false}
+                  onChange={val => handleInput("endTime" , val)}
+                />
               </Box>
             </RadioGroup>
           </FormControl>

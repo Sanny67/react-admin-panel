@@ -66,7 +66,12 @@ const Calendar = () => {
     const [showEventsBar, setShowEventsBar] = useState(false);
     const [openEventSaveModal, setOpenEventSaveModal] = useState(false);
     const [selectedDateEvent, setSelectedDateEvent] = useState({});
-    
+    const [currentView, setCurrentView] = useState('dayGridMonth');
+
+    const handleViewChange = (viewInfo) => {
+        setCurrentView(viewInfo.view.type);
+    };
+
     const handleDateClick = (selected) => {
         setOpenEventSaveModal(true);
         setSelectedDateEvent(selected);
@@ -194,7 +199,7 @@ const Calendar = () => {
                         height="70vh"
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
                         headerToolbar={{...headerToolbar}}
-                        initialView="dayGridMonth"
+                        initialView={currentView}
                         editable={true}
                         selectable={true}
                         selectMirror={true}
@@ -202,6 +207,7 @@ const Calendar = () => {
                         select={handleDateClick}
                         eventClick={handleEventClick}
                         eventsSet={events => setCurrentEvents(events)}
+                        viewDidMount={(viewInfo) => handleViewChange(viewInfo)}
                         initialEvents={[
                             {id: "1234", title: "All-day-event", date: "2024-03-25"},
                             {id: "1235", title: "Timed-event", allDay: false, start: "2024-03-28T21:30:00", end: "2024-03-28T23:30:00"},
@@ -212,6 +218,7 @@ const Calendar = () => {
 
             <SaveEvent
                 saveEvent={saveEvent}
+                currentView={currentView}
                 open={openEventSaveModal}
                 setOpen={setOpenEventSaveModal}
                 selectedDateEvent={selectedDateEvent}
