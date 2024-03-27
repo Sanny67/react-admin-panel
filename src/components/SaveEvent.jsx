@@ -24,7 +24,7 @@ const SaveEvent = ({open, setOpen, saveEvent, currentView, selectedDateEvent}) =
   };
 
   const [formData, setFormData] = useState(inititalValues);
-  const [errors, setErrors] = useState(inititalValues);
+  const [errors, setErrors] = useState({title: "", allDay: "", startTime: "", endTime: ""});
 
   useEffect(() => {
     if(open && currentView === "timeGridDay") {
@@ -36,6 +36,8 @@ const SaveEvent = ({open, setOpen, saveEvent, currentView, selectedDateEvent}) =
 
   const handleClose = () => {
     setOpen(false);
+    setFormData(inititalValues);
+    setErrors({title: "", allDay: "", startTime: "", endTime: ""});
   };
 
   const handleInput = (key, value) => {
@@ -51,14 +53,25 @@ const SaveEvent = ({open, setOpen, saveEvent, currentView, selectedDateEvent}) =
   };
 
   const formValidated = () => {
-    let err = 0;
-    setErrors(inititalValues);
+    let errs = {};
     if(formData.title == ""){
-      err++;
-      setErrors({...errors , title: "Please input event title"});
+      errs.title = "Please input event title";
     }
-    return err > 0 ? false : true;
-  }
+    if(!formData.allDay){
+      const dateStr = selectedDateEvent.startStr;
+      const start = new Date(`${dateStr} ${formData.startTime}`);
+      const end = new Date(`${dateStr} ${formData.endTime}`);
+      if(start >= end){
+        errs.endTime = "Start Time must be less than end time";
+      }
+    }
+    if(Object.keys(errs).length > 0){
+      setErrors({title: "", allDay: "", startTime: "", endTime: "", ...errs});
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   const handleSubmit = () => {
     if(formValidated()){
@@ -89,6 +102,10 @@ const SaveEvent = ({open, setOpen, saveEvent, currentView, selectedDateEvent}) =
     } : {}
   };
 
+  useEffect(() => {
+    console.log("errors", errors)
+  }, [errors]);
+
   return (
     <>
       <Dialog
@@ -116,7 +133,7 @@ const SaveEvent = ({open, setOpen, saveEvent, currentView, selectedDateEvent}) =
           />
           <FormControl>
             {/* <FormLabel id="demo-radio-buttons-group-label">Event Time</FormLabel> */}
-            <Typography paddingBottom={0}>Event Time</Typography>
+            <Typography paddingBottom={0}>Event Time {errors.endTime != "" && " - "} {errors.endTime != "" && <span style={{ color: "#f13b2f" }}>{errors.endTime}</span>}</Typography>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="female"
